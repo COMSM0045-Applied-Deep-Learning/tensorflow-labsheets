@@ -4,10 +4,10 @@ Lab sheets for the Advanced Deep Learning course
 
 ### Overview
 
-| Labsheet  | Description |
-|-----------|-------------|
-| [0: Intro to Python](Lab_0_Python_Intro/0%20-%20Contents.ipynb) | Introduction to Python and the scientific python ecosystem |
-| [1: Welcome to BC4 and TensorFlow]() | How to log into Blue Crystal, introduction to training a classifier |
+| Labsheet | Description |
+|----------|-------------|
+| 0        | Introduction to Python and the scientific python ecosystem |
+| 1        | How to log into Blue Crystal, introduction to training a classifier |
 
 ### Problems
 
