@@ -6,7 +6,7 @@ Lab sheets for the Advanced Deep Learning course
 
 | Labsheet | Description |
 |----------|-------------|
-| 0        | Introduction to Python and the scientific python ecosystem |
+| [0](Lab_0_Python_Intro/0%20-%20Contents.ipynb) | Introduction to Python and the scientific python ecosystem |
 | 1        | How to log into Blue Crystal, introduction to training a classifier |
 
 ### Problems
