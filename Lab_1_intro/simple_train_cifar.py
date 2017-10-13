@@ -26,7 +26,7 @@ import cifar10 as cf
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('data-dir', os.getcwd() + '/dataset/',
-                           'Directory where the dataset will be stored and checkpoint.')
+                            'Directory where the dataset will be stored and checkpoint.')
 tf.app.flags.DEFINE_integer('max-steps', 1000,
                             'Number of mini-batches to train on.')
 tf.app.flags.DEFINE_integer('log-frequency', 100,
@@ -69,7 +69,7 @@ def deepnn(x):
 
     img_summary = tf.summary.image('Input_images', x_image)
 
-    # First convolutional layer - maps one grayscale image to 32 feature maps.
+    # First convolutional layer - maps one image to 32 feature maps.
     with tf.variable_scope('Conv_1'):
         W_conv1 = weight_variable([5, 5, FLAGS.img_channels, 32])
         b_conv1 = bias_variable([32])
@@ -88,7 +88,7 @@ def deepnn(x):
         h_pool2 = max_pool_2x2(h_conv2)
 
     with tf.variable_scope('FC_1'):
-        # Fully connected layer 1 -- after 2 round of downsampling, our 28x28
+        # Fully connected layer 1 -- after 2 round of downsampling, our 32x32
         # image is down to 8x8x64 feature maps -- maps this to 1024 features.
         W_fc1 = weight_variable([8 * 8 * 64, 1024])
         b_fc1 = bias_variable([1024])
@@ -97,7 +97,7 @@ def deepnn(x):
         h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
     with tf.variable_scope('FC_2'):
-        # Map the 1024 features to 10 classes, one for each digit
+        # Map the 1024 features to 10 classes
         W_fc2 = weight_variable([1024, FLAGS.num_classes])
         b_fc2 = bias_variable([FLAGS.num_classes])
 
