@@ -17,6 +17,7 @@ from __future__ import print_function
 import sys
 
 import os
+import os.path
 
 import tensorflow as tf
 
@@ -26,28 +27,28 @@ import cifar10 as cf
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('data-dir', os.getcwd() + '/dataset/',
-                            'Directory where the dataset will be stored and checkpoint.')
-tf.app.flags.DEFINE_integer('max-steps', 1000,
-                            'Number of mini-batches to train on.')
-tf.app.flags.DEFINE_integer('log-frequency', 100,
-                            'Number of steps between logging results to the console and saving summaries')
+                            'Directory where the dataset will be stored and checkpoint. (default: %(default)s)')
+tf.app.flags.DEFINE_integer('max-steps', 10000,
+                            'Number of mini-batches to train on. (default: %(default)d)')
+tf.app.flags.DEFINE_integer('log-frequency', 10,
+                            'Number of steps between logging results to the console and saving summaries (default: %(default)d)')
 tf.app.flags.DEFINE_integer('save-model', 1000,
-                            'Number of steps between model saves')
+                            'Number of steps between model saves (default: %(default)d)')
 
 # Optimisation hyperparameters
-tf.app.flags.DEFINE_integer('batch-size', 128, 'Number of examples per mini-batch')
-tf.app.flags.DEFINE_float('learning-rate', 1e-4, 'Number of examples to run.')
-tf.app.flags.DEFINE_integer('img-width', 32, 'Image width')
-tf.app.flags.DEFINE_integer('img-height', 32, 'Image height')
-tf.app.flags.DEFINE_integer('img-channels', 3, 'Image channels')
-tf.app.flags.DEFINE_integer('num-classes', 10, 'Number of classes')
-tf.app.flags.DEFINE_string('train-dir',
-                           '{cwd}/logs/exp_bs_{bs}_lr_{lr}'.format(cwd=os.getcwd(),
-                                                                   bs=FLAGS.batch_size,
-                                                                   lr=FLAGS.learning_rate),
-                           'Directory where to write event logs and checkpoint.')
+tf.app.flags.DEFINE_integer('batch-size', 128, 'Number of examples per mini-batch (default: %(default)d)')
+tf.app.flags.DEFINE_float('learning-rate', 1e-4, 'Number of examples to run. (default: %(default)d)')
+tf.app.flags.DEFINE_integer('img-width', 32, 'Image width (default: %(default)d)')
+tf.app.flags.DEFINE_integer('img-height', 32, 'Image height (default: %(default)d)')
+tf.app.flags.DEFINE_integer('img-channels', 3, 'Image channels (default: %(default)d)')
+tf.app.flags.DEFINE_integer('num-classes', 10, 'Number of classes (default: %(default)d)')
+tf.app.flags.DEFINE_string('log-dir', '{cwd}/logs/'.format(cwd=os.getcwd()),
+                           'Directory where to write event logs and checkpoint. (default: %(default)s)')
 
 
+run_log_dir = os.path.join(FLAGS.log_dir,
+                           'exp_bs_{bs}_lr_{lr}'.format(bs=FLAGS.batch_size,
+                                                        lr=FLAGS.learning_rate))
 def deepnn(x):
     """deepnn builds the graph for a deep net for classifying CIFAR10 images.
 
@@ -161,8 +162,8 @@ def main(_):
     saver = tf.train.Saver(tf.global_variables(), max_to_keep=1)
 
     with tf.Session() as sess:
-        summary_writer = tf.summary.FileWriter(FLAGS.train_dir + '_train', sess.graph)
-        summary_writer_validation = tf.summary.FileWriter(FLAGS.train_dir + '_validate', sess.graph)
+        summary_writer = tf.summary.FileWriter(run_log_dir + '_train', sess.graph)
+        summary_writer_validation = tf.summary.FileWriter(run_log_dir + '_validate', sess.graph)
 
         sess.run(tf.global_variables_initializer())
 
@@ -185,7 +186,7 @@ def main(_):
 
             # Save the model checkpoint periodically.
             if step % FLAGS.save_model == 0 or (step + 1) == FLAGS.max_steps:
-                checkpoint_path = os.path.join(FLAGS.train_dir + '_train', 'model.ckpt')
+                checkpoint_path = os.path.join(run_log_dir + '_train', 'model.ckpt')
                 saver.save(sess, checkpoint_path, global_step=step)
 
         # Testing
@@ -196,8 +197,8 @@ def main(_):
         test_accuracy = 0
         batch_count = 0
 
+        # don't loop back when we reach the end of the test set
         while evaluated_images != cifar.nTestSamples:
-            # don't loop back when we reach the end of the test set
             (testImages, testLabels) = cifar.getTestBatch(allowSmallerBatches=True)
             test_accuracy_temp, _ = sess.run([accuracy, test_summary], feed_dict={x: testImages, y_: testLabels})
 
