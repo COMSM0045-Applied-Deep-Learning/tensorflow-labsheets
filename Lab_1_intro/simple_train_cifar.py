@@ -163,7 +163,6 @@ def main(_):
     with tf.Session() as sess:
         summary_writer = tf.summary.FileWriter(FLAGS.train_dir + '_train', sess.graph)
         summary_writer_validation = tf.summary.FileWriter(FLAGS.train_dir + '_validate', sess.graph)
-        summary_writer_test = tf.summary.FileWriter(FLAGS.train_dir + '_test', sess.graph)
 
         sess.run(tf.global_variables_initializer())
 
