@@ -49,7 +49,7 @@ tf.app.flags.DEFINE_string('train-dir',
 
 
 def deepnn(x):
-    '''deepnn builds the graph for a deep net for classifying CIFAR10 images.
+    """deepnn builds the graph for a deep net for classifying CIFAR10 images.
 
   Args:
       x: an input tensor with the dimensions (N_examples, 3072), where 3072 is the
@@ -60,7 +60,7 @@ def deepnn(x):
         equal to the logits of classifying the object images into one of 10 classes
         (airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck)
       img_summary: a string tensor containing sampled input images.
-    '''
+    """
     # Reshape to use within a convolutional neural net.  Last dimension is for
     # 'features' - it would be 1 one for a grayscale image, 3 for an RGB image,
     # 4 for RGBA, etc.
@@ -106,24 +106,24 @@ def deepnn(x):
 
 
 def conv2d(x, W):
-    '''conv2d returns a 2d convolution layer with full stride.'''
+    """conv2d returns a 2d convolution layer with full stride."""
     return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME', name='convolution')
 
 
 def max_pool_2x2(x):
-    '''max_pool_2x2 downsamples a feature map by 2X.'''
+    """max_pool_2x2 downsamples a feature map by 2X."""
     return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                           strides=[1, 2, 2, 1], padding='SAME', name='pooling')
 
 
 def weight_variable(shape):
-    '''weight_variable generates a weight variable of a given shape.'''
+    """weight_variable generates a weight variable of a given shape."""
     initial = tf.truncated_normal(shape, stddev=0.1)
     return tf.Variable(initial, name='weights')
 
 
 def bias_variable(shape):
-    '''bias_variable generates a bias variable of a given shape.'''
+    """bias_variable generates a bias variable of a given shape."""
     initial = tf.constant(0.1, shape=shape)
     return tf.Variable(initial, name='biases')
 
@@ -192,20 +192,20 @@ def main(_):
 
         # resetting the internal batch indexes
         cifar.reset()
-        evaluatedImages = 0
+        evaluated_images = 0
         test_accuracy = 0
-        nRuns = 0
+        batch_count = 0
 
-        while evaluatedImages != cifar.nTestSamples:
+        while evaluated_images != cifar.nTestSamples:
             # don't loop back when we reach the end of the test set
             (testImages, testLabels) = cifar.getTestBatch(allowSmallerBatches=True)
             test_accuracy_temp, _ = sess.run([accuracy, test_summary], feed_dict={x: testImages, y_: testLabels})
 
-            nRuns = nRuns + 1
+            batch_count = batch_count + 1
             test_accuracy = test_accuracy + test_accuracy_temp
-            evaluatedImages = evaluatedImages + testLabels.shape[0]
+            evaluated_images = evaluated_images + testLabels.shape[0]
 
-        test_accuracy = test_accuracy / nRuns
+        test_accuracy = test_accuracy / batch_count
         print('test set: accuracy on test set: %0.3f' % test_accuracy)
 
 
