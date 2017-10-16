@@ -37,7 +37,7 @@ tf.app.flags.DEFINE_integer('save-model', 1000,
 
 # Optimisation hyperparameters
 tf.app.flags.DEFINE_integer('batch-size', 128, 'Number of examples per mini-batch (default: %(default)d)')
-tf.app.flags.DEFINE_float('learning-rate', 1e-4, 'Number of examples to run. (default: %(default)d)')
+tf.app.flags.DEFINE_float('learning-rate', 1e-4, 'Learning rate (default: %(default)d)')
 tf.app.flags.DEFINE_integer('img-width', 32, 'Image width (default: %(default)d)')
 tf.app.flags.DEFINE_integer('img-height', 32, 'Image height (default: %(default)d)')
 tf.app.flags.DEFINE_integer('img-channels', 3, 'Image channels (default: %(default)d)')
