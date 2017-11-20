@@ -141,14 +141,31 @@ class cifar10:
         self.dataPath = _maybe_download_cifar10(download_dir=downloadDir, download_url=downloadUrl)
         self.loadCIFAR10()
 
-        # changing from row major to column major order for our tf scripts
-        self.trainData = self.trainData.reshape(-1, self.IMG_CHANNELS, self.IMG_WIDTH, self.IMG_WIDTH).transpose(0, 2,
-                                                                                                                 3,
-                                                                                                                 1).reshape(
-            -1, self.IMG_CHANNELS * self.IMG_WIDTH * self.IMG_HEIGHT)
-        self.testData = self.testData.reshape(-1, self.IMG_CHANNELS, self.IMG_WIDTH, self.IMG_WIDTH).transpose(0, 2, 3,
-                                                                                                               1).reshape(
-            -1, self.IMG_CHANNELS * self.IMG_WIDTH * self.IMG_HEIGHT)
+        self.trainData = self._swapChannelOrdering(self.trainData)
+        self.testData = self._swapChannelOrdering(self.testData)
+
+    def preprocess(self):
+        """
+        Convert pixel values to lie within [0, 1]
+        """
+        self.trainData = self._normaliseImages(self.trainData.astype(np.float32, copy=False))
+        self.testData = self._normaliseImages(self.testData.astype(np.float32, copy=False))
+
+    def _normaliseImages(self, imgs_flat):
+        min = np.min(imgs_flat)
+        max = np.max(imgs_flat)
+        range = max - min
+        return (imgs_flat - min) / range
+
+    def _unflatten(self, imgs_flat):
+        return imgs_flat.reshape(-1, self.IMG_WIDTH, self.IMG_HEIGHT, self.IMG_CHANNELS)
+
+    def _flatten(self, imgs):
+        return imgs.reshape(-1, self.IMG_WIDTH * self.IMG_HEIGHT * self.IMG_CHANNELS)
+
+    def _swapChannelOrdering(self, imgs_flat):
+        return self._flatten(imgs_flat.reshape(-1, self.IMG_CHANNELS, self.IMG_WIDTH, self.IMG_HEIGHT)\
+                             .transpose(0, 2, 3, 1))
 
     def loadCIFAR10(self):
         trainFilenames = [os.path.join(self.dataPath, 'data_batch_%d' % i) for i in range(1, 6)]
