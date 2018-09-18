@@ -1,1 +1,0 @@
-../Lab_1_intro/tensorboard_params.sh
