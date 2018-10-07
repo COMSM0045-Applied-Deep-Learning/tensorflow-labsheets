@@ -7,6 +7,7 @@ Lab sheets for the Advanced Deep Learning course
 | Labsheet | Description |
 |----------|-------------|
 | [0](Lab_0_Python_Intro/0%20-%20Contents.ipynb) | [Introduction to Python and the scientific python ecosystem](Lab_0_Python_Intro/0%20-%20Contents.ipynb) |
+| [1](Lab_1_DNNs/Lab%20sheet%201.ipynb) | [Your First Fully Connected Network](Lab_1_DNNs/Lab%20sheet%201.ipynb) |
 
 ### Problems
 
